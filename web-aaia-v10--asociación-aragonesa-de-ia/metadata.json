@@ -1,7 +1,0 @@
-{
-  "name": "Web AAIA v10  Asociación Aragonesa de IA",
-  "description": "Sitio web institucional de la Asociación Aragonesa de Inteligencia Artificial, enfocado en formación, ética y democratización de la tecnología en la región de Aragón.",
-  "requestFramePermissions": [
-    "geolocation"
-  ]
-}
