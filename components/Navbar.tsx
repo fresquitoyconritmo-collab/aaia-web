@@ -24,20 +24,25 @@ const Navbar: React.FC<NavbarProps> = ({
   onNavigateNews,
   onNavigateMembership
 }) => {
+  // Cambiamos a ruta relativa sin la barra inicial para mayor compatibilidad
+  const LOGO_URL = "logo_aaia.png";
+
   return (
     <nav className="fixed w-full z-50 bg-white/80 dark:bg-slate-900/80 glass-panel border-b border-slate-200 dark:border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          <button onClick={onNavigateHome} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <img 
-              src="https://raw.githubusercontent.com/Asociacion-Aragonesa-IA/web/main/public/logo_aaia.png" 
-              alt="Logo AAIA" 
-              className="h-12 w-auto object-contain dark:brightness-110"
-              onError={(e) => {
-                // Fallback en caso de que la URL no cargue el nuevo archivo
-                e.currentTarget.style.display = 'none';
-              }}
-            />
+          <button onClick={onNavigateHome} className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+            <div className="relative flex items-center">
+              <img 
+                src={LOGO_URL} 
+                alt="Logo AAIA" 
+                className="h-12 w-auto object-contain transition-transform group-hover:scale-110"
+                onError={(e) => {
+                  // Si falla el PNG, ocultamos la imagen y el usuario seguirá viendo el texto AAIA al lado
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
             <div className="flex flex-col items-start leading-none">
               <span className="font-black text-2xl tracking-tighter text-slate-900 dark:text-white">AAIA</span>
               <span className="text-[8px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]">Asociación Aragonesa de IA</span>
