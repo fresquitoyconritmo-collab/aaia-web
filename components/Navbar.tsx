@@ -24,8 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({
   onNavigateNews,
   onNavigateMembership
 }) => {
-  // Cambiamos a ruta relativa sin la barra inicial para mayor compatibilidad
-  const LOGO_URL = "logo_aaia.png";
+  const LOGO_URL = "logo_aaia.svg";
 
   return (
     <nav className="fixed w-full z-50 bg-white/80 dark:bg-slate-900/80 glass-panel border-b border-slate-200 dark:border-slate-800">
@@ -38,7 +37,6 @@ const Navbar: React.FC<NavbarProps> = ({
                 alt="Logo AAIA" 
                 className="h-12 w-auto object-contain transition-transform group-hover:scale-110"
                 onError={(e) => {
-                  // Si falla el PNG, ocultamos la imagen y el usuario seguirá viendo el texto AAIA al lado
                   e.currentTarget.style.display = 'none';
                 }}
               />

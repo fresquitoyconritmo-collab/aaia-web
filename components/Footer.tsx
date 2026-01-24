@@ -18,9 +18,8 @@ const Footer: React.FC<FooterProps> = ({
   onNavigateMembership,
   onNavigateStatutes
 }) => {
-  const LOGO_URL = "logo_aaia.png";
+  const LOGO_URL = "logo_aaia.svg";
 
-  // Iconos sociales en SVG para máxima calidad
   const SocialIcons = {
     LinkedIn: (
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

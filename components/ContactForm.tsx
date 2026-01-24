@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 
-// Componente de Contacto - Versión v12 (Dirección corregida al n.º 8)
 const ContactForm: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -17,6 +17,7 @@ const ContactForm: React.FC = () => {
     if (!formData.nombre || !formData.email || !formData.mensaje) return;
     
     setStatus('submitting');
+    setErrorMessage('');
     
     try {
       const response = await fetch('/api/contact', {
@@ -25,15 +26,18 @@ const ContactForm: React.FC = () => {
         body: JSON.stringify(formData)
       });
 
+      const result = await response.json();
+
       if (response.ok) {
         setStatus('success');
         setFormData({ nombre: '', email: '', telefono: '', asunto: 'Información General', mensaje: '' });
       } else {
-        throw new Error('Error en el servidor');
+        throw new Error(result.error || 'Error al enviar el mensaje');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error de envío:", error);
-      setStatus('success'); 
+      setErrorMessage(error.message || 'Lo sentimos, ha ocurrido un error técnico. Por favor, inténtalo de nuevo más tarde o escríbenos directamente a aaia.aragon@gmail.com');
+      setStatus('error');
     }
   };
 
@@ -74,6 +78,15 @@ const ContactForm: React.FC = () => {
               </div>
             ) : (
               <form className="space-y-6" onSubmit={handleSubmit}>
+                {status === 'error' && (
+                  <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-2xl text-red-600 dark:text-red-400 text-sm font-medium animate-in slide-in-from-top-2">
+                    <div className="flex gap-3">
+                      <span className="material-icons-round text-lg">error_outline</span>
+                      <p>{errorMessage}</p>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 mb-2 uppercase tracking-widest">Nombre completo</label>
@@ -82,7 +95,8 @@ const ContactForm: React.FC = () => {
                       required
                       value={formData.nombre}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm h-14 px-5 font-medium transition-all" 
+                      disabled={status === 'submitting'}
+                      className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm h-14 px-5 font-medium transition-all disabled:opacity-50" 
                       placeholder="Ej. Juan Pérez" 
                       type="text" 
                     />
@@ -94,7 +108,8 @@ const ContactForm: React.FC = () => {
                       required
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm h-14 px-5 font-medium transition-all" 
+                      disabled={status === 'submitting'}
+                      className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm h-14 px-5 font-medium transition-all disabled:opacity-50" 
                       placeholder="tu@email.com" 
                       type="email" 
                     />
@@ -109,7 +124,8 @@ const ContactForm: React.FC = () => {
                         name="telefono"
                         value={formData.telefono}
                         onChange={handleChange}
-                        className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm h-14 pl-12 pr-5 font-medium transition-all" 
+                        disabled={status === 'submitting'}
+                        className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm h-14 pl-12 pr-5 font-medium transition-all disabled:opacity-50" 
                         placeholder="+34 600 000 000" 
                         type="tel" 
                       />
@@ -121,7 +137,8 @@ const ContactForm: React.FC = () => {
                       name="asunto"
                       value={formData.asunto}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm h-14 px-5 font-medium transition-all appearance-none"
+                      disabled={status === 'submitting'}
+                      className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm h-14 px-5 font-medium transition-all appearance-none disabled:opacity-50"
                     >
                       <option>Información General</option>
                       <option>Hacerse Socio</option>
@@ -137,7 +154,8 @@ const ContactForm: React.FC = () => {
                     required
                     value={formData.mensaje}
                     onChange={handleChange}
-                    className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm p-5 font-medium transition-all" 
+                    disabled={status === 'submitting'}
+                    className="w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm p-5 font-medium transition-all disabled:opacity-50" 
                     placeholder="Cuéntanos cómo podemos ayudarte..." 
                     rows={4}
                   ></textarea>
@@ -154,7 +172,7 @@ const ContactForm: React.FC = () => {
             )}
           </div>
 
-          {/* Panel de Info con Dirección Corregida (Calle Canfranc, 8) */}
+          {/* Panel de Info */}
           <div className="relative bg-slate-900 overflow-hidden flex flex-col border-l border-slate-800">
             <div className="absolute inset-0 opacity-20 group">
               <img 
