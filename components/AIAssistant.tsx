@@ -1,21 +1,5 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleGenAI } from "@google/genai";
-
-const GEM_CONFIG = {
-  systemInstruction: `Eres el Asistente IA de la Asociación Aragonesa de Inteligencia Artificial (AAIA).
-  Propósito: Ayudar a los usuarios con dudas sobre la asociación, sus fines, socios y estatutos.
-  Fines: Promoción de formación, atención a colectivos prioritarios (tercera edad, juventud, mujeres), divulgación ética e investigación en Aragón.
-  Naturaleza: Sin ánimo de lucro, fundada en Zaragoza el 2 de enero de 2026.
-  
-  Reglas de oro:
-  - Saluda cálidamente y menciona que eres el asistente de la AAIA.
-  - Responde de forma directa, amable y con identidad aragonesa.
-  - No inventes información. Si no sabes algo, sugiere contactar a aaia.aragon@gmail.com.
-  - Mantén las respuestas breves (máximo 3 párrafos).
-  - Si preguntan por estatutos, diles que pueden verlos en la sección de Transparencia del portal.`,
-  modelId: 'gemini-3-flash-preview' 
-};
 
 const AIAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,9 +9,6 @@ const AIAssistant: React.FC = () => {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  
-  // Referencia para mantener la sesión de chat activa
-  const chatSessionRef = useRef<any>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -39,42 +20,33 @@ const AIAssistant: React.FC = () => {
     const userMsg = input.trim();
     if (!userMsg || isLoading) return;
 
-    // Validación de API Key
-    if (!process.env.API_KEY || process.env.API_KEY === "undefined") {
-      setMessages(prev => [...prev, 
-        { role: 'user', text: userMsg },
-        { role: 'bot', text: "Error de configuración: No se ha detectado la clave de API en el servidor. Por favor, contacta con el administrador." }
-      ]);
-      setInput('');
-      return;
-    }
-
     setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setInput('');
     setIsLoading(true);
 
     try {
-      // Inicializar chat si no existe
-      if (!chatSessionRef.current) {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        chatSessionRef.current = ai.chats.create({
-          model: GEM_CONFIG.modelId,
-          config: {
-            systemInstruction: GEM_CONFIG.systemInstruction,
-            temperature: 0.7,
-          }
-        });
-      }
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMsg,
+          history: messages.slice(1)
+        })
+      });
 
-      const response = await chatSessionRef.current.sendMessage({ message: userMsg });
-      const botText = response.text || "No he podido generar una respuesta. Por favor, inténtalo de nuevo.";
-      
-      setMessages(prev => [...prev, { role: 'bot', text: botText }]);
-    } catch (error) {
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessages(prev => [...prev, { role: 'bot', text: data.text }]);
+      } else {
+        throw new Error(data.error || 'Error de comunicación');
+      }
+    } catch (error: any) {
       console.error("AI Error:", error);
-      setMessages(prev => [...prev, { role: 'bot', text: "Lo siento, mi conexión se ha interrumpido. Por favor, comprueba que la API Key esté correctamente configurada en Vercel." }]);
-      // Limpiar chat en caso de error crítico para permitir reintento limpio
-      chatSessionRef.current = null;
+      setMessages(prev => [...prev, { 
+        role: 'bot', 
+        text: `Error: ${error.message}. Si eres el administrador, comprueba que has añadido la variable API_KEY en Vercel y has hecho un "Redeploy".` 
+      }]);
     } finally {
       setIsLoading(false);
     }
@@ -141,7 +113,7 @@ const AIAssistant: React.FC = () => {
                 <span className="material-icons-round text-sm">send</span>
               </button>
             </div>
-            <p className="text-[10px] text-center text-slate-400 mt-2 font-medium italic">Powered by Gemini • Asociación Aragonesa de IA</p>
+            <p className="text-[10px] text-center text-slate-400 mt-2 font-medium italic">Gestión Segura • IA Responsable</p>
           </div>
         </div>
       )}
