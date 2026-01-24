@@ -5,7 +5,7 @@ const AIAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{role: 'user' | 'bot', text: string}[]>([
-    { role: 'bot', text: '¡Hola! Soy el asistente de AAIA. ¿En qué puedo ayudarte hoy?' }
+    { role: 'bot', text: '¡Qué pasa pues! Soy el asistente de AAIA. ¿En qué te puedo ayudar, maño?' }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -30,7 +30,7 @@ const AIAssistant: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMsg,
-          history: messages.slice(1)
+          history: messages.slice(1) // Enviamos el historial sin el saludo inicial
         })
       });
 
@@ -39,13 +39,13 @@ const AIAssistant: React.FC = () => {
       if (response.ok) {
         setMessages(prev => [...prev, { role: 'bot', text: data.text }]);
       } else {
-        throw new Error(data.error || 'Error de comunicación');
+        throw new Error(data.error || 'Error de comunicación con el servidor');
       }
     } catch (error: any) {
       console.error("AI Error:", error);
       setMessages(prev => [...prev, { 
         role: 'bot', 
-        text: `Error: ${error.message}. Si eres el administrador, comprueba que has añadido la variable API_KEY en Vercel y has hecho un "Redeploy".` 
+        text: `Lo siento, maño. Me he liau un poco: "${error.message}". Prueba a preguntarme otra cosa o contacta con nosotros si el problema persiste.` 
       }]);
     } finally {
       setIsLoading(false);
