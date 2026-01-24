@@ -2,18 +2,82 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
 
+/**
+ * CONFIGURACIÓN DE TU "GEM":
+ * 
+ * 1. Si tu Gem es un conjunto de instrucciones: 
+ *    Copia y pega las instrucciones de tu Gem en 'systemInstruction'.
+ * 
+ * 2. Si tu Gem es un "Tuned Model" de Google AI Studio:
+ *    Cambia 'modelId' por el ID de tu modelo (ej: 'tunedModels/mi-modelo-123').
+ */
 const GEM_CONFIG = {
-  systemInstruction: `Eres el Asistente IA de la Asociación Aragonesa de Inteligencia Artificial (AAIA).
-  Propósito: Ayudar a los usuarios con dudas sobre la asociación, sus fines, socios y estatutos.
-  Fines: Promoción de formación, atención a colectivos prioritarios (tercera edad, juventud, mujeres), divulgación ética e investigación en Aragón.
-  Naturaleza: Sin ánimo de lucro, fundada en Zaragoza el 2 de enero de 2026.
+  // PEGA AQUÍ LAS INSTRUCCIONES DE TU GEM
+  systemInstruction: `Propósito y Objetivos:
+
+
+
+* Actuar como un consejero experto y amable para los miembros de la asociación.
+
+* Proporcionar respuestas directas, útiles y precisas a las consultas de los usuarios sobre la asociación, sus beneficios y procedimientos.
+
+* Mantener un ambiente de apoyo y profesionalismo en cada interacción.
+
+
+
+Comportamientos y Reglas:
+
+
+
+1) Interacción Inicial:
+
+ a) Saluda al usuario de manera cálida y profesional.
+
+ b) Identifícate como el 'Asistente IA de la Asociación'.
+
+ c) Pregunta en qué puedes ayudar al usuario hoy de forma clara y concisa.
+
+
+
+2) Manejo de Consultas:
+
+ a) Responde directamente a la pregunta planteada sin rodeos innecesarios.
+
+ b) Si la información solicitada es compleja, divídela en puntos fáciles de leer.
+
+ c) Utiliza un lenguaje que refleje experiencia y autoridad en el tema, pero que sea accesible para todos.
+
+ d) Si no conoces la respuesta a una pregunta específica sobre la asociación, sugiere al usuario que se ponga en contacto con la administración central.
+
+
+
+3) Estilo de Comunicación:
+
+ a) Mantén las respuestas breves y al punto, idealmente no más de 3 párrafos.
+
+ b) Usa emojis de forma moderada para mantener un tono amable pero profesional.
+
+ c) Siempre termina la interacción preguntando si hay algo más en lo que puedas asistir.
+
+
+
+ Tono General:
+
+* Profesional, experto, amable y servicial.
+
+* Evita el uso de jerga técnica excesiva a menos que sea necesario.
+
+* Proyecta confianza y disposición para ayudar.
+  - Fines: Promoción de formación, atención a colectivos prioritarios (tercera edad, juventud, mujeres), divulgación ética, investigación y cohesión territorial en Aragón.
+  - Naturaleza: Organización sin ánimo de lucro, constituida en Zaragoza el 2 de enero de 2026.
+  - Compromisos: Transparencia radical, cumplimiento del Reglamento de IA de la UE y alineación con los ODS 4, 5, 9, 10, 11, 13 y 17 de la Agenda 2030.
+  - Socios: Existen socios promotores, de número, de honor y protectores.
   
-  Reglas de oro:
-  - Saluda cálidamente y menciona que eres el asistente de la AAIA.
-  - Responde de forma directa, amable y con identidad aragonesa.
-  - No inventes información. Si no sabes algo, sugiere contactar a aaia.aragon@gmail.com.
-  - Mantén las respuestas breves (máximo 3 párrafos).
-  - Si preguntan por estatutos, diles que pueden verlos en la sección de Transparencia del portal.`,
+  Responde siempre en español con un tono profesional, cercano y con identidad aragonesa. 
+  Si te preguntan por detalles legales, menciona que pueden consultar la sección de "Estatutos" en el portal de Transparencia.
+  Mantén las respuestas concisas y útiles.`,
+  
+  // MODELO A UTILIZAR (Cámbialo si usas un modelo ajustado propio)
   modelId: 'gemini-3-flash-preview' 
 };
 
@@ -25,9 +89,6 @@ const AIAssistant: React.FC = () => {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  
-  // Referencia para mantener la sesión de chat activa
-  const chatSessionRef = useRef<any>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -36,45 +97,29 @@ const AIAssistant: React.FC = () => {
   }, [messages]);
 
   const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+
     const userMsg = input.trim();
-    if (!userMsg || isLoading) return;
-
-    // Validación de API Key
-    if (!process.env.API_KEY || process.env.API_KEY === "undefined") {
-      setMessages(prev => [...prev, 
-        { role: 'user', text: userMsg },
-        { role: 'bot', text: "Error de configuración: No se ha detectado la clave de API en el servidor. Por favor, contacta con el administrador." }
-      ]);
-      setInput('');
-      return;
-    }
-
     setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setInput('');
     setIsLoading(true);
 
     try {
-      // Inicializar chat si no existe
-      if (!chatSessionRef.current) {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        chatSessionRef.current = ai.chats.create({
-          model: GEM_CONFIG.modelId,
-          config: {
-            systemInstruction: GEM_CONFIG.systemInstruction,
-            temperature: 0.7,
-          }
-        });
-      }
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const response = await ai.models.generateContent({
+        model: GEM_CONFIG.modelId,
+        contents: userMsg,
+        config: {
+          systemInstruction: GEM_CONFIG.systemInstruction,
+          temperature: 0.7,
+        }
+      });
 
-      const response = await chatSessionRef.current.sendMessage({ message: userMsg });
-      const botText = response.text || "No he podido generar una respuesta. Por favor, inténtalo de nuevo.";
-      
+      const botText = response.text || "Lo siento, no he podido procesar tu consulta en este momento.";
       setMessages(prev => [...prev, { role: 'bot', text: botText }]);
     } catch (error) {
       console.error("AI Error:", error);
-      setMessages(prev => [...prev, { role: 'bot', text: "Lo siento, mi conexión se ha interrumpido. Por favor, comprueba que la API Key esté correctamente configurada en Vercel." }]);
-      // Limpiar chat en caso de error crítico para permitir reintento limpio
-      chatSessionRef.current = null;
+      setMessages(prev => [...prev, { role: 'bot', text: "Lo siento, mi conexión se ha interrumpido. Por favor, inténtalo de nuevo en unos segundos." }]);
     } finally {
       setIsLoading(false);
     }
@@ -82,17 +127,17 @@ const AIAssistant: React.FC = () => {
 
   return (
     <div className="fixed bottom-8 right-8 z-[100] font-sans">
-      {/* Ventana de Chat */}
+      {/* Chat Window */}
       {isOpen && (
-        <div className="absolute bottom-20 right-0 w-[350px] sm:w-[400px] h-[550px] bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800 animate-in slide-in-from-bottom-5 duration-300">
+        <div className="absolute bottom-20 right-0 w-[350px] sm:w-[400px] h-[500px] bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800 animate-in slide-in-from-bottom-5 duration-300">
           <div className="bg-primary p-6 text-white flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="material-icons-round">smart_toy</span>
+                <span className="material-icons-round">psychology</span>
               </div>
               <div>
                 <h4 className="font-bold">Asistente AAIA</h4>
-                <p className="text-[10px] opacity-80 uppercase tracking-widest font-bold">En línea</p>
+                <p className="text-[10px] opacity-80 uppercase tracking-widest font-bold">Personalizado con tu Gem</p>
               </div>
             </div>
             <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 rounded-lg p-1 transition-colors">
@@ -103,7 +148,7 @@ const AIAssistant: React.FC = () => {
           <div ref={scrollRef} className="flex-grow p-6 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/50">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                <div className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                   msg.role === 'user' 
                     ? 'bg-primary text-white rounded-tr-none shadow-md' 
                     : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-slate-700 rounded-tl-none shadow-sm'
@@ -115,9 +160,9 @@ const AIAssistant: React.FC = () => {
             {isLoading && (
               <div className="flex justify-start">
                 <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm flex gap-1">
-                  <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce"></div>
-                  <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                  <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
+                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
                 </div>
               </div>
             )}
@@ -130,7 +175,7 @@ const AIAssistant: React.FC = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Pregunta sobre la asociación..."
+                placeholder="Escribe tu mensaje..."
                 className="flex-grow bg-transparent border-none focus:ring-0 text-sm py-2 px-3 text-slate-800 dark:text-white"
               />
               <button 
@@ -141,12 +186,12 @@ const AIAssistant: React.FC = () => {
                 <span className="material-icons-round text-sm">send</span>
               </button>
             </div>
-            <p className="text-[10px] text-center text-slate-400 mt-2 font-medium italic">Powered by Gemini • Asociación Aragonesa de IA</p>
+            <p className="text-[10px] text-center text-slate-400 mt-2 font-medium italic">Potenciado por Gemini • Pulsa el código para editar las instrucciones</p>
           </div>
         </div>
       )}
 
-      {/* Botón Flotante */}
+      {/* Trigger Button */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group relative"

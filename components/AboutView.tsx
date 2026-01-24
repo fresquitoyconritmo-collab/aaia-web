@@ -47,7 +47,7 @@ const AboutView: React.FC<AboutViewProps> = ({ onBack, onContact }) => {
             },
             {
               role: "Secretaría",
-              name: "Diana Redondo",
+              name: "Diana Cuadrado",
               desc: "Perfil especializado en relaciones institucionales, comunicación y política pública, encargada de la gestión de eventos y la vinculación con la administración.",
               icon: "account_balance"
             },

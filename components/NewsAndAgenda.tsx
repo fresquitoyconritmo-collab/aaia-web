@@ -2,30 +2,15 @@
 import React, { useState } from 'react';
 
 const NewsAndAgenda: React.FC = () => {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [subscribed, setSubscribed] = useState(false);
   const [email, setEmail] = useState('');
 
-  const handleSubscribe = async (e: React.FormEvent) => {
+  const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || status === 'loading') return;
-
-    setStatus('loading');
-
-    try {
-      // SIMULACIÓN DE LLAMADA A API
-      // En producción, aquí harías: await fetch('/api/subscribe', { method: 'POST', body: JSON.stringify({ email }) })
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setStatus('success');
-      setEmail('');
-      
-      // Volver al estado inicial después de unos segundos
-      setTimeout(() => setStatus('idle'), 6000);
-    } catch (error) {
-      console.error("Error al suscribir:", error);
-      setStatus('error');
-      setTimeout(() => setStatus('idle'), 4000);
-    }
+    if (!email) return;
+    setSubscribed(true);
+    setEmail('');
+    setTimeout(() => setSubscribed(false), 5000);
   };
 
   return (
@@ -80,54 +65,27 @@ const NewsAndAgenda: React.FC = () => {
                 <a className="text-primary font-bold text-sm hover:underline flex items-center gap-1" href="#">Leer más <span className="material-icons-round text-sm">arrow_right_alt</span></a>
               </article>
             </div>
-
-            {/* Newsletter Card */}
-            <div className="bg-primary rounded-3xl p-8 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden min-h-[250px] flex flex-col justify-center">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-              
-              {status === 'success' ? (
-                <div className="flex flex-col items-center justify-center py-6 animate-in zoom-in duration-300 text-center">
-                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
-                    <span className="material-icons-round text-4xl">mark_email_read</span>
-                  </div>
-                  <h4 className="text-2xl font-bold">¡Bienvenido al boletín!</h4>
-                  <p className="text-blue-100 mt-2 font-medium">Hemos registrado tu email. Pronto recibirás nuestras novedades.</p>
-                </div>
-              ) : status === 'error' ? (
-                <div className="flex flex-col items-center justify-center py-6 animate-in shake duration-300 text-center">
-                  <span className="material-icons-round text-5xl mb-4 text-red-300">error_outline</span>
-                  <h4 className="text-xl font-bold">Hubo un problema</h4>
-                  <p className="text-blue-100 mt-2">No pudimos procesar tu suscripción. Inténtalo de nuevo.</p>
-                  <button onClick={() => setStatus('idle')} className="mt-4 text-sm underline font-bold">Reintentar</button>
+            <div className="bg-primary rounded-3xl p-8 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden">
+              {subscribed ? (
+                <div className="flex flex-col items-center justify-center py-6 animate-in zoom-in duration-300">
+                  <span className="material-icons-round text-5xl mb-4">check_circle</span>
+                  <h4 className="text-2xl font-bold">¡Gracias por suscribirte!</h4>
+                  <p className="text-blue-100 mt-2">Pronto recibirás nuestras novedades.</p>
                 </div>
               ) : (
                 <>
-                  <h4 className="text-2xl font-bold mb-3 relative z-10">Suscríbete a nuestro boletín</h4>
-                  <p className="text-blue-100 mb-8 font-medium relative z-10">Recibe las últimas noticias y eventos directamente en tu correo.</p>
-                  <form className="flex flex-col sm:flex-row gap-3 relative z-10" onSubmit={handleSubscribe}>
+                  <h4 className="text-2xl font-bold mb-3">Suscríbete a nuestro boletín</h4>
+                  <p className="text-blue-100 mb-8 font-medium">Recibe las últimas noticias y eventos directamente en tu correo.</p>
+                  <form className="flex flex-col sm:flex-row gap-3" onSubmit={handleSubscribe}>
                     <input 
-                      className={`flex-grow rounded-xl px-5 py-4 text-slate-900 focus:outline-none focus:ring-4 focus:ring-blue-300 border-none placeholder-slate-400 font-medium transition-opacity ${status === 'loading' ? 'opacity-50' : 'opacity-100'}`} 
+                      className="flex-grow rounded-xl px-5 py-4 text-slate-900 focus:outline-none focus:ring-4 focus:ring-blue-300 border-none placeholder-slate-400 font-medium" 
                       placeholder="tu@email.com" 
                       type="email" 
                       required
-                      disabled={status === 'loading'}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
-                    <button 
-                      type="submit" 
-                      disabled={status === 'loading'}
-                      className="bg-blue-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-black transition-all hover:scale-105 shrink-0 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100"
-                    >
-                      {status === 'loading' ? (
-                        <>
-                          <span className="material-icons-round animate-spin">sync</span>
-                          Enviando...
-                        </>
-                      ) : (
-                        'Suscribir'
-                      )}
-                    </button>
+                    <button type="submit" className="bg-blue-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-black transition-all hover:scale-105 shrink-0">Suscribir</button>
                   </form>
                 </>
               )}
