@@ -18,8 +18,6 @@ const Footer: React.FC<FooterProps> = ({
   onNavigateMembership,
   onNavigateStatutes
 }) => {
-  const LOGO_URL = "logo_aaia.svg";
-
   const SocialIcons = {
     LinkedIn: (
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -49,14 +47,6 @@ const Footer: React.FC<FooterProps> = ({
         <div className="grid md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center gap-3 mb-6 text-white">
-              <img 
-                src={LOGO_URL} 
-                alt="AAIA Logo" 
-                className="h-10 w-auto"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
               <span className="font-black text-2xl tracking-tighter">AAIA</span>
             </div>
             <p className="mb-8 text-slate-400 leading-relaxed font-medium">

@@ -50,9 +50,9 @@ const NewsAndAgenda: React.FC = () => {
               <div className="absolute left-[7px] top-2 bottom-0 w-[2px] bg-slate-200 dark:bg-slate-800"></div>
               
               {[
-                { type: "Conferencia", color: "blue", title: "IA y Futuro del Trabajo en Aragón", date: "15 Feb 2026 - 10:00", loc: "Auditorio ZGZ" },
+                { type: "Conferencia", color: "blue", title: "IA y Futuro del Trabajo en Aragón", date: "15 Feb 2026 - 10:00", loc: "ZGZ" },
                 { type: "Taller", color: "purple", title: "IA para Mayores: Primeros Pasos", date: "22 Feb 2026 - 16:00", loc: "25 plazas" },
-                { type: "Mesa Redonda", color: "orange", title: "Ética en IA: Retos 2026", date: "1 Mar 2026 - 18:30", loc: "Unizar" }
+                { type: "Mesa Redonda", color: "orange", title: "Ética en IA: Retos 2026", date: "25 Abril 2026 - 18:30", loc: "Centro Cívico Universidad" }
               ].map((act, idx) => (
                 <div key={idx} className="pl-8 relative">
                   <div className="absolute left-0 top-1 w-4 h-4 rounded-full bg-primary border-4 border-slate-50 dark:border-slate-950 z-10"></div>
@@ -74,14 +74,14 @@ const NewsAndAgenda: React.FC = () => {
             </h3>
             <div className="space-y-8 mb-12">
               <article className="group cursor-pointer">
-                <div className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-widest">8 Ene 2026 • Institucional</div>
-                <h4 className="font-bold text-lg dark:text-white group-hover:text-primary transition-colors mb-3 leading-tight">AAIA firma convenio de colaboración con la Universidad de Zaragoza</h4>
+                <div className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-widest">12 Ene 2026 • Institucional</div>
+                <h4 className="font-bold text-lg dark:text-white group-hover:text-primary transition-colors mb-3 leading-tight">Se funda la Asociación Aragonesa de Inteligencia Artificial</h4>
                 <a className="text-primary font-bold text-sm hover:underline flex items-center gap-1" href="#">Leer más <span className="material-icons-round text-sm">arrow_right_alt</span></a>
               </article>
               <hr className="border-slate-200 dark:border-slate-800" />
               <article className="group cursor-pointer">
-                <div className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-widest">20 Dic 2025 • Formación</div>
-                <h4 className="font-bold text-lg dark:text-white group-hover:text-primary transition-colors mb-3 leading-tight">Lanzamiento del programa piloto de alfabetización digital</h4>
+                <div className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-widest">24 Febrero 2026 • Formación</div>
+                <h4 className="font-bold text-lg dark:text-white group-hover:text-primary transition-colors mb-3 leading-tight">Preparando el programa piloto de alfabetización digital</h4>
                 <a className="text-primary font-bold text-sm hover:underline flex items-center gap-1" href="#">Leer más <span className="material-icons-round text-sm">arrow_right_alt</span></a>
               </article>
             </div>
