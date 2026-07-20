@@ -16,11 +16,12 @@ import AboutView from './components/AboutView';
 import TrainingDetailView from './components/TrainingDetailView';
 import BusinessTrainingDetailView from './components/BusinessTrainingDetailView';
 import EducationTrainingDetailView from './components/EducationTrainingDetailView';
-import TrainingOverview from './components/TrainingOverview';
+import InternationalCooperation from './components/InternationalCooperation';
+import CommunityNetwork from './components/CommunityNetwork';
 
 const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'home' | 'statutes' | 'about' | 'training_detail' | 'business_training_detail' | 'education_training_detail' | 'training_overview'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'statutes' | 'about' | 'training_detail' | 'business_training_detail' | 'education_training_detail'>('home');
 
   useEffect(() => {
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -62,12 +63,6 @@ const App: React.FC = () => {
     setCurrentPage('about');
     window.scrollTo(0, 0);
   };
-
-  const navigateToTrainingOverview = () => {
-    setCurrentPage('training_overview');
-    window.scrollTo(0, 0);
-  };
-
   const navigateToTrainingDetail = () => {
     setCurrentPage('training_detail');
     window.scrollTo(0, 0);
@@ -166,18 +161,46 @@ const App: React.FC = () => {
     }
   };
 
+  const navigateToCooperationSection = () => {
+    if (currentPage !== 'home') {
+      setCurrentPage('home');
+      setTimeout(() => {
+        const cooperationSection = document.getElementById('cooperacion');
+        if (cooperationSection) cooperationSection.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const cooperationSection = document.getElementById('cooperacion');
+      if (cooperationSection) cooperationSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const navigateToCommunitySection = () => {
+    if (currentPage !== 'home') {
+      setCurrentPage('home');
+      setTimeout(() => {
+        const communitySection = document.getElementById('comunidad');
+        if (communitySection) communitySection.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const communitySection = document.getElementById('comunidad');
+      if (communitySection) communitySection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen transition-colors duration-500 selection:bg-primary selection:text-white">
       <Navbar 
         isDarkMode={isDarkMode} 
         toggleTheme={toggleTheme} 
         onNavigateHome={navigateToHome} 
-        onNavigateTraining={navigateToTrainingOverview}
+        onNavigateTraining={navigateToTrainingSection}
         onNavigateContact={navigateToContact}
         onNavigateEthics={navigateToEthics}
         onNavigateMission={navigateToMission}
         onNavigateNews={navigateToNews}
         onNavigateMembership={navigateToMembership}
+        onNavigateCooperation={navigateToCooperationSection}
+        onNavigateCommunity={navigateToCommunitySection}
       />
       
       {currentPage === 'home' && (
@@ -201,6 +224,12 @@ const App: React.FC = () => {
               onOpenEducationDetail={navigateToEducationTrainingDetail}
             />
           </section>
+          <section id="cooperacion" className="reveal">
+            <InternationalCooperation onContactClick={navigateToContact} />
+          </section>
+          <section id="comunidad" className="reveal">
+            <CommunityNetwork onContactClick={navigateToContact} />
+          </section>
           <section id="etica" className="reveal"><EthicsSection /></section>
           <section className="reveal">
             <Transparency onOpenStatutes={navigateToStatutes} />
@@ -222,12 +251,6 @@ const App: React.FC = () => {
       {currentPage === 'about' && (
         <main className="animate-in slide-in-from-right-10 duration-500">
           <AboutView onBack={navigateToHome} onContact={navigateToContact} />
-        </main>
-      )}
-
-      {currentPage === 'training_overview' && (
-        <main className="animate-in slide-in-from-right-10 duration-500">
-          <TrainingOverview onBack={navigateToHome} onContact={navigateToContact} />
         </main>
       )}
 
@@ -256,6 +279,8 @@ const App: React.FC = () => {
         onNavigateNews={navigateToNews}
         onNavigateMembership={navigateToMembership}
         onNavigateStatutes={navigateToStatutes}
+        onNavigateCooperation={navigateToCooperationSection}
+        onNavigateCommunity={navigateToCommunitySection}
       />
       <AIAssistant />
     </div>

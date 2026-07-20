@@ -1,5 +1,7 @@
-
 import React from 'react';
+import { useLanguage } from './LanguageContext';
+// @ts-ignore
+import logoUrl from '../logo_aaia.png';
 
 interface FooterProps {
   onNavigateHome?: () => void;
@@ -8,6 +10,8 @@ interface FooterProps {
   onNavigateNews?: () => void;
   onNavigateMembership?: () => void;
   onNavigateStatutes?: () => void;
+  onNavigateCooperation?: () => void;
+  onNavigateCommunity?: () => void;
 }
 
 const Footer: React.FC<FooterProps> = ({
@@ -16,8 +20,13 @@ const Footer: React.FC<FooterProps> = ({
   onNavigateTraining,
   onNavigateNews,
   onNavigateMembership,
-  onNavigateStatutes
+  onNavigateStatutes,
+  onNavigateCooperation,
+  onNavigateCommunity
 }) => {
+  const LOGO_URL = logoUrl;
+  const { t } = useLanguage();
+
   const SocialIcons = {
     LinkedIn: (
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -47,10 +56,25 @@ const Footer: React.FC<FooterProps> = ({
         <div className="grid md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center gap-3 mb-6 text-white">
+              <img 
+                src={LOGO_URL} 
+                alt="AAIA Logo" 
+                className="h-10 w-auto"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
               <span className="font-black text-2xl tracking-tighter">AAIA</span>
             </div>
             <p className="mb-8 text-slate-400 leading-relaxed font-medium">
-              Asociación Aragonesa de Inteligencia Artificial. Promoviendo el desarrollo ético y responsable de la IA en todo el territorio.
+              {t({
+                es: "Asociación Aragonesa de Inteligencia Artificial. Promoviendo el desarrollo ético y responsable de la IA en todo el territorio.",
+                en: "Aragonese Association of Artificial Intelligence. Promoting the ethical and responsible development of AI across the region.",
+                de: "Aragonesische Vereinigung für Künstliche Intelligenz. Förderung der ethischen und verantwortungsvollen Entwicklung der KI in der gesamten Region.",
+                fr: "Association Aragonaise d'Intelligence Artificielle. Promouvoir le développement éthique et responsable de l'IA sur l'ensemble du territoire.",
+                it: "Associazione Aragonese di Intelligenza Artificiale. Promuovere lo sviluppo etico e responsabile dell'IA in tutto il territorio.",
+                ro: "Asociația Aragoneză de Inteligență Artificială. Promovarea dezvoltării etice și responsabile a IA pe întreg teritoriul."
+              })}
             </p>
             <div className="flex gap-4">
               <a 
@@ -83,38 +107,147 @@ const Footer: React.FC<FooterProps> = ({
               </a>
             </div>
           </div>
+          
           <div>
-            <h4 className="text-white font-bold mb-8 uppercase tracking-widest text-xs">Navegación</h4>
+            <h4 className="text-white font-bold mb-8 uppercase tracking-widest text-xs">
+              {t({
+                es: "Navegación",
+                en: "Navigation",
+                de: "Navigation",
+                fr: "Navigation",
+                it: "Navigazione",
+                ro: "Navigare"
+              })}
+            </h4>
             <ul className="space-y-4 font-medium">
-              <li><button onClick={onNavigateHome} className="hover:text-primary transition-colors text-left w-full">Inicio</button></li>
-              <li><button onClick={onNavigateMission} className="hover:text-primary transition-colors text-left w-full">Misión</button></li>
-              <li><button onClick={onNavigateTraining} className="hover:text-primary transition-colors text-left w-full">Formación</button></li>
-              <li><button onClick={onNavigateNews} className="hover:text-primary transition-colors text-left w-full">Actualidad</button></li>
+              <li>
+                <button onClick={onNavigateHome} className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Inicio", en: "Home", de: "Startseite", fr: "Accueil", it: "Home", ro: "Acasă" })}
+                </button>
+              </li>
+              <li>
+                <button onClick={onNavigateMission} className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Misión", en: "Mission", de: "Mission", fr: "Mission", it: "Mission", ro: "Misiune" })}
+                </button>
+              </li>
+              <li>
+                <button onClick={onNavigateTraining} className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Formación", en: "Training", de: "Ausbildung", fr: "Formation", it: "Formazione", ro: "Formare" })}
+                </button>
+              </li>
+              <li>
+                <button onClick={onNavigateCooperation} className="hover:text-primary transition-colors text-left w-full flex items-center gap-1">
+                  <span className="material-icons-round text-sm text-primary">public</span>
+                  {t({ es: "Cooperación Internacional", en: "International Cooperation", de: "Internationale Kooperation", fr: "Coopération Internationale", it: "Cooperazione Internazionale", ro: "Cooperare Internațională" })}
+                </button>
+              </li>
+              <li>
+                <button onClick={onNavigateCommunity} className="hover:text-primary transition-colors text-left w-full flex items-center gap-1">
+                  <span className="material-icons-round text-sm text-indigo-500">groups</span>
+                  {t({ es: "Red de Líderes", en: "Leaders' Network", de: "Netzwerk der Führungskräfte", fr: "Réseau des Leaders", it: "Network dei Leader", ro: "Rețeaua Liderilor" })}
+                </button>
+              </li>
+              <li>
+                <button onClick={onNavigateNews} className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Actualidad", en: "News", de: "Aktuelles", fr: "Actualités", it: "Attualità", ro: "Actualități" })}
+                </button>
+              </li>
             </ul>
           </div>
+          
           <div>
-            <h4 className="text-white font-bold mb-8 uppercase tracking-widest text-xs">Participa</h4>
+            <h4 className="text-white font-bold mb-8 uppercase tracking-widest text-xs">
+              {t({
+                es: "Participa",
+                en: "Participate",
+                de: "Mitmachen",
+                fr: "Participer",
+                it: "Partecipa",
+                ro: "Participă"
+              })}
+            </h4>
             <ul className="space-y-4 font-medium">
-              <li><button onClick={onNavigateMembership} className="hover:text-primary transition-colors text-left w-full">Hazte Socio</button></li>
-              <li><button className="hover:text-primary transition-colors text-left w-full">Voluntariado</button></li>
-              <li><button className="hover:text-primary transition-colors text-left w-full">Colabora con Proyectos</button></li>
-              <li><button className="hover:text-primary transition-colors text-left w-full">Donaciones</button></li>
+              <li>
+                <button onClick={onNavigateMembership} className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Hazte Socio", en: "Become a Member", de: "Mitglied werden", fr: "Devenir Membre", it: "Diventa Socio", ro: "Devină Membru" })}
+                </button>
+              </li>
+              <li>
+                <button className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Voluntariado", en: "Volunteering", de: "Ehrenamt", fr: "Bénévolat", it: "Volontariato", ro: "Voluntariat" })}
+                </button>
+              </li>
+              <li>
+                <button className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Colabora con Proyectos", en: "Collaborate on Projects", de: "An Projekten mitwirken", fr: "Collaborer aux Projets", it: "Collabora con i Progetti", ro: "Colaborează la Proiecte" })}
+                </button>
+              </li>
+              <li>
+                <button className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Donaciones", en: "Donations", de: "Spenden", fr: "Dons", it: "Donazioni", ro: "Donații" })}
+                </button>
+              </li>
             </ul>
           </div>
+          
           <div>
-            <h4 className="text-white font-bold mb-8 uppercase tracking-widest text-xs">Legal</h4>
+            <h4 className="text-white font-bold mb-8 uppercase tracking-widest text-xs">
+              {t({
+                es: "Legal",
+                en: "Legal",
+                de: "Rechtliches",
+                fr: "Mentions Légales",
+                it: "Legale",
+                ro: "Legal"
+              })}
+            </h4>
             <ul className="space-y-4 font-medium">
-              <li><button onClick={onNavigateStatutes} className="hover:text-primary transition-colors text-left w-full">Estatutos</button></li>
-              <li><button className="hover:text-primary transition-colors text-left w-full">Política de Privacidad</button></li>
-              <li><button className="hover:text-primary transition-colors text-left w-full">Aviso Legal</button></li>
-              <li><button className="hover:text-primary transition-colors text-left w-full">Código Ético</button></li>
+              <li>
+                <button onClick={onNavigateStatutes} className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Estatutos", en: "Statutes", de: "Satzung", fr: "Statuts", it: "Statuto", ro: "Statut" })}
+                </button>
+              </li>
+              <li>
+                <button className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Política de Privacidad", en: "Privacy Policy", de: "Datenschutzerklärung", fr: "Politique de Confidentialité", it: "Informativa sulla Privacy", ro: "Politică de Confidențialitate" })}
+                </button>
+              </li>
+              <li>
+                <button className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Aviso Legal", en: "Legal Notice", de: "Impressum", fr: "Avis Légal", it: "Note Legali", ro: "Mențiuni Legale" })}
+                </button>
+              </li>
+              <li>
+                <button className="hover:text-primary transition-colors text-left w-full">
+                  {t({ es: "Código Ético", en: "Ethical Code", de: "Verhaltenskodex", fr: "Code d'Éthique", it: "Codice Etico", ro: "Cod Etic" })}
+                </button>
+              </li>
             </ul>
           </div>
         </div>
+        
         <div className="border-t border-slate-900 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-slate-500 font-medium">© 2026 Asociación Aragonesa de Inteligencia Artificial. Todos los derechos reservados.</p>
+          <p className="text-slate-500 font-medium">
+            {t({
+              es: "© 2026 Asociación Aragonesa de Inteligencia Artificial. Todos los derechos reservados.",
+              en: "© 2026 Aragonese Association of Artificial Intelligence. All rights reserved.",
+              de: "© 2026 Aragonesische Vereinigung für Künstliche Intelligenz. Alle Rechte vorbehalten.",
+              fr: "© 2026 Association Aragonaise d'Intelligence Artificielle. Tous droits réservés.",
+              it: "© 2026 Associazione Aragonese di Intelligenza Artificiale. Tutti i diritti riservati.",
+              ro: "© 2026 Asociația Aragoneză de Inteligență Artificială. Toate drepturile rezervate."
+            })}
+          </p>
           <div className="flex items-center gap-3 text-slate-400 font-bold text-xs uppercase tracking-widest">
-            <span>Desarrollado con IA Ética</span>
+            <span>
+              {t({
+                es: "Desarrollado con IA Ética",
+                en: "Developed with Ethical AI",
+                de: "Entwickelt mit ethischer KI",
+                fr: "Développé avec une IA Éthique",
+                it: "Sviluppato con IA Etica",
+                ro: "Dezvoltat cu IA Etică"
+              })}
+            </span>
             <span className="material-icons-round text-primary">smart_toy</span>
           </div>
         </div>

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useLanguage } from './LanguageContext';
 
 interface MissionProps {
   onNavigateTraining?: () => void;
@@ -14,35 +15,37 @@ const Mission: React.FC<MissionProps> = ({
   onNavigateContact,
   onNavigateEthics
 }) => {
+  const { t } = useLanguage();
+
   const pillars = [
     {
       icon: "school",
-      title: "Formación e Investigación",
-      description: "Impulsamos el talento aragonés mediante programas educativos y estudios científicos en IA.",
+      title: t('mission_pillar1_title'),
+      description: t('mission_pillar1_desc'),
       color: "bg-blue-500",
       accent: "text-blue-500",
       action: onNavigateTraining
     },
     {
       icon: "diversity_1",
-      title: "Divulgación y Brecha Digital",
-      description: "Acercamos la IA a la sociedad y trabajamos para que nadie se quede atrás, especialmente los colectivos en riesgo de exclusión.",
+      title: t('mission_pillar2_title'),
+      description: t('mission_pillar2_desc'),
       color: "bg-indigo-500",
       accent: "text-indigo-500",
       action: onNavigateNews
     },
     {
       icon: "gavel",
-      title: "Asesoramiento Ético",
-      description: "Guiamos a empresas e instituciones para que implementen una Inteligencia Artificial responsable y transparente.",
+      title: t('mission_pillar3_title'),
+      description: t('mission_pillar3_desc'),
       color: "bg-purple-500",
       accent: "text-purple-500",
       action: onNavigateEthics
     },
     {
       icon: "hub",
-      title: "Innovación Regional",
-      description: "Desarrollamos proyectos piloto e I+D aplicados a resolver problemas reales de nuestro territorio.",
+      title: t('mission_pillar4_title'),
+      description: t('mission_pillar4_desc'),
       color: "bg-emerald-500",
       accent: "text-emerald-500",
       action: onNavigateContact
@@ -58,14 +61,14 @@ const Mission: React.FC<MissionProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-24">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-400 text-xs font-black mb-6 uppercase tracking-widest border border-blue-100 dark:border-blue-800">
-            Nuestro Propósito
+            {t('mission_purpose')}
           </div>
           <h2 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight">
-            Nuestra <span className="text-primary">Misión</span>
+            {t('mission_title_1')} <span className="text-primary">{t('mission_title_2')}</span>
           </h2>
           <div className="h-1.5 w-24 bg-primary mx-auto rounded-full mb-8"></div>
           <p className="max-w-3xl mx-auto text-slate-600 dark:text-slate-400 text-xl font-medium leading-relaxed">
-            Impulsar el desarrollo y uso responsable de la Inteligencia Artificial en Aragón, garantizando su acceso equitativo y su aplicación ética para fortalecer nuestro territorio.
+            {t('mission_subtitle')}
           </p>
         </div>
 
@@ -92,7 +95,7 @@ const Mission: React.FC<MissionProps> = ({
                   onClick={() => pillar.action && pillar.action()}
                   className={`flex items-center gap-2 font-black text-xs uppercase tracking-widest transition-all ${pillar.accent} hover:translate-x-1`}
                 >
-                  Ver detalles 
+                  {t('mission_view_details')} 
                   <span className="material-icons-round text-sm">east</span>
                 </button>
               </div>
@@ -108,9 +111,9 @@ const Mission: React.FC<MissionProps> = ({
               <span className="material-icons-round text-white text-4xl">verified</span>
             </div>
             <div className="text-left">
-              <h4 className="text-white text-xl font-black mb-2 uppercase tracking-tight">Compromiso con el Reglamento de la UE</h4>
+              <h4 className="text-white text-xl font-black mb-2 uppercase tracking-tight">{t('mission_commitment_title')}</h4>
               <p className="text-slate-400 text-sm max-w-2xl font-medium">
-                Todas nuestras acciones están alineadas con la Ley de Inteligencia Artificial de la Unión Europea y los Objetivos de Desarrollo Sostenible de la Agenda 2030.
+                {t('mission_commitment_desc')}
               </p>
             </div>
           </div>

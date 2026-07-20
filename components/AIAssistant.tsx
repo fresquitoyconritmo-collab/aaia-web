@@ -1,14 +1,31 @@
-
 import React, { useState, useRef, useEffect } from 'react';
+import { useLanguage } from './LanguageContext';
 
 const AIAssistant: React.FC = () => {
+  const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<{role: 'user' | 'bot', text: string}[]>([
-    { role: 'bot', text: '¡Qué pasa pues! Soy el asistente de AAIA. ¿En qué te puedo ayudar, maño?' }
-  ]);
-  const [isLoading, setIsLoading] = useState(false);
+  
+  const [messages, setMessages] = useState<{role: 'user' | 'bot', text: string}[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Initialize initial message when language changes or on mount
+  useEffect(() => {
+    setMessages([
+      { 
+        role: 'bot', 
+        text: t({
+          es: '¡Qué pasa pues! Soy el asistente de AAIA. ¿En qué te puedo ayudar, maño?',
+          en: 'Hello there! I am the AAIA assistant. How can I help you?',
+          de: 'Hallo! Ich bin der AAIA-Assistent. Wie kann ich Ihnen helfen?',
+          fr: "Bonjour ! Je suis l'assistant AAIA. Comment puis-je vous aider ?",
+          it: "Ciao! Sono l'assistente AAIA. Come posso aiutarti?",
+          ro: 'Bună ziua! Sunt asistentul AAIA. Cu ce vă pot ajuta?'
+        })
+      }
+    ]);
+  }, [language]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -30,7 +47,7 @@ const AIAssistant: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMsg,
-          history: messages.slice(1)
+          history: messages.slice(1).map(m => ({ role: m.role, text: m.text }))
         })
       });
 
@@ -39,17 +56,32 @@ const AIAssistant: React.FC = () => {
       if (response.ok) {
         setMessages(prev => [...prev, { role: 'bot', text: data.text }]);
       } else {
-        // Manejo específico de sobrecarga
+        // Specific overload handling
         if (response.status === 503) {
-          throw new Error("Hay mucha gente preguntando ahora mismo. Espera un poquico y vuelve a darle al botón.");
+          throw new Error(t({
+            es: "Hay mucha gente preguntando ahora mismo. Espera un poquico y vuelve a darle al botón.",
+            en: "There are many people asking questions right now. Please wait a moment and try again.",
+            de: "Im Moment stellen viele Leute Fragen. Bitte warten Sie einen Moment und versuchen Sie es erneut.",
+            fr: "Il y a beaucoup de personnes qui posent des questions en ce moment. Veuillez patienter un instant et réessayer.",
+            it: "Ci sono molte persone che fanno domande in questo momento. Attendi un momento e riprova.",
+            ro: "Sunt multe persoane care pun întrebări în acest moment. Vă rugăm să așteptați un moment și să încercați din nou."
+          }));
         }
-        throw new Error(data.error || 'Error de comunicación');
+        throw new Error(data.error || (language === 'es' ? 'Error de comunicación' : 'Communication error'));
       }
     } catch (error: any) {
       console.error("AI Error:", error);
+      const prefix = t({
+        es: "Escucha, maño: ",
+        en: "Look: ",
+        de: "Schau mal: ",
+        fr: "Regardez : ",
+        it: "Senti: ",
+        ro: "Uite: "
+      });
       setMessages(prev => [...prev, { 
         role: 'bot', 
-        text: `Escucha, maño: ${error.message}` 
+        text: `${prefix}${error.message}` 
       }]);
     } finally {
       setIsLoading(false);
@@ -66,8 +98,26 @@ const AIAssistant: React.FC = () => {
                 <span className="material-icons-round">smart_toy</span>
               </div>
               <div>
-                <h4 className="font-bold">Asistente AAIA</h4>
-                <p className="text-[10px] opacity-80 uppercase tracking-widest font-bold">En línea</p>
+                <h4 className="font-bold">
+                  {t({
+                    es: "Asistente AAIA",
+                    en: "AAIA Assistant",
+                    de: "AAIA-Assistent",
+                    fr: "Assistant AAIA",
+                    it: "Assistente AAIA",
+                    ro: "Asistent AAIA"
+                  })}
+                </h4>
+                <p className="text-[10px] opacity-80 uppercase tracking-widest font-bold">
+                  {t({
+                    es: "En línea",
+                    en: "Online",
+                    de: "Online",
+                    fr: "En ligne",
+                    it: "In linea",
+                    ro: "Online"
+                  })}
+                </p>
               </div>
             </div>
             <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 rounded-lg p-1 transition-colors">
@@ -93,7 +143,16 @@ const AIAssistant: React.FC = () => {
                   <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce"></div>
                   <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                   <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
-                  <span className="text-[10px] text-slate-400 font-bold ml-1 italic">Pensando...</span>
+                  <span className="text-[10px] text-slate-400 font-bold ml-1 italic">
+                    {t({
+                      es: "Pensando...",
+                      en: "Thinking...",
+                      de: "Überlegen...",
+                      fr: "Réflexion...",
+                      it: "Pensando...",
+                      ro: "Se gândește..."
+                    })}
+                  </span>
                 </div>
               </div>
             )}
@@ -106,8 +165,15 @@ const AIAssistant: React.FC = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Escribe aquí tu duda..."
-                className="flex-grow bg-transparent border-none focus:ring-0 text-sm py-2 px-3 text-slate-800 dark:text-white disabled:opacity-50"
+                placeholder={t({
+                  es: "Escribe aquí tu duda...",
+                  en: "Type your question here...",
+                  de: "Geben Sie Ihre Frage hier ein...",
+                  fr: "Écrivez votre question ici...",
+                  it: "Scrivi qui la tua domanda...",
+                  ro: "Scrieți întrebarea dvs. aici..."
+                })}
+                className="flex-grow bg-transparent border-none focus:ring-0 text-sm py-2 px-3 text-slate-800 dark:text-white disabled:opacity-50 font-sans focus:outline-none"
                 disabled={isLoading}
               />
               <button 
