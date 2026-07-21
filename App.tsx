@@ -17,7 +17,6 @@ import TrainingDetailView from './components/TrainingDetailView';
 import BusinessTrainingDetailView from './components/BusinessTrainingDetailView';
 import EducationTrainingDetailView from './components/EducationTrainingDetailView';
 import InternationalCooperation from './components/InternationalCooperation';
-import CommunityNetwork from './components/CommunityNetwork';
 
 const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -174,19 +173,6 @@ const App: React.FC = () => {
     }
   };
 
-  const navigateToCommunitySection = () => {
-    if (currentPage !== 'home') {
-      setCurrentPage('home');
-      setTimeout(() => {
-        const communitySection = document.getElementById('comunidad');
-        if (communitySection) communitySection.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
-      const communitySection = document.getElementById('comunidad');
-      if (communitySection) communitySection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="min-h-screen transition-colors duration-500 selection:bg-primary selection:text-white">
       <Navbar 
@@ -200,7 +186,6 @@ const App: React.FC = () => {
         onNavigateNews={navigateToNews}
         onNavigateMembership={navigateToMembership}
         onNavigateCooperation={navigateToCooperationSection}
-        onNavigateCommunity={navigateToCommunitySection}
       />
       
       {currentPage === 'home' && (
@@ -226,9 +211,6 @@ const App: React.FC = () => {
           </section>
           <section id="cooperacion" className="reveal">
             <InternationalCooperation onContactClick={navigateToContact} />
-          </section>
-          <section id="comunidad" className="reveal">
-            <CommunityNetwork onContactClick={navigateToContact} />
           </section>
           <section id="etica" className="reveal"><EthicsSection /></section>
           <section className="reveal">
@@ -280,7 +262,6 @@ const App: React.FC = () => {
         onNavigateMembership={navigateToMembership}
         onNavigateStatutes={navigateToStatutes}
         onNavigateCooperation={navigateToCooperationSection}
-        onNavigateCommunity={navigateToCommunitySection}
       />
       <AIAssistant />
     </div>

@@ -15,7 +15,6 @@ interface NavbarProps {
   onNavigateNews: () => void;
   onNavigateMembership: () => void;
   onNavigateCooperation: () => void;
-  onNavigateCommunity: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ 
@@ -28,8 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({
   onNavigateMission,
   onNavigateNews,
   onNavigateMembership,
-  onNavigateCooperation,
-  onNavigateCommunity
+  onNavigateCooperation
 }) => {
   const LOGO_URL = logoUrl;
   const { language, setLanguage, t } = useLanguage();
@@ -65,10 +63,6 @@ const Navbar: React.FC<NavbarProps> = ({
             <button onClick={onNavigateCooperation} className="hover:text-primary transition-colors flex items-center gap-1">
               <span className="material-icons-round text-sm text-primary">public</span>
               {t('nav_cooperacion')}
-            </button>
-            <button onClick={onNavigateCommunity} className="hover:text-primary transition-colors flex items-center gap-1">
-              <span className="material-icons-round text-sm text-indigo-500">groups</span>
-              {t('nav_red_lideres')}
             </button>
             <button onClick={onNavigateEthics} className="hover:text-primary transition-colors">{t('nav_etica')}</button>
             <button onClick={onNavigateNews} className="hover:text-primary transition-colors">{t('nav_actualidad')}</button>

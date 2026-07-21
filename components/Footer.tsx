@@ -11,7 +11,6 @@ interface FooterProps {
   onNavigateMembership?: () => void;
   onNavigateStatutes?: () => void;
   onNavigateCooperation?: () => void;
-  onNavigateCommunity?: () => void;
 }
 
 const Footer: React.FC<FooterProps> = ({
@@ -21,8 +20,7 @@ const Footer: React.FC<FooterProps> = ({
   onNavigateNews,
   onNavigateMembership,
   onNavigateStatutes,
-  onNavigateCooperation,
-  onNavigateCommunity
+  onNavigateCooperation
 }) => {
   const LOGO_URL = logoUrl;
   const { t } = useLanguage();
@@ -139,12 +137,6 @@ const Footer: React.FC<FooterProps> = ({
                 <button onClick={onNavigateCooperation} className="hover:text-primary transition-colors text-left w-full flex items-center gap-1">
                   <span className="material-icons-round text-sm text-primary">public</span>
                   {t({ es: "Cooperación Internacional", en: "International Cooperation", de: "Internationale Kooperation", fr: "Coopération Internationale", it: "Cooperazione Internazionale", ro: "Cooperare Internațională" })}
-                </button>
-              </li>
-              <li>
-                <button onClick={onNavigateCommunity} className="hover:text-primary transition-colors text-left w-full flex items-center gap-1">
-                  <span className="material-icons-round text-sm text-indigo-500">groups</span>
-                  {t({ es: "Red de Líderes", en: "Leaders' Network", de: "Netzwerk der Führungskräfte", fr: "Réseau des Leaders", it: "Network dei Leader", ro: "Rețeaua Liderilor" })}
                 </button>
               </li>
               <li>

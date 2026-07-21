@@ -1,5 +1,5 @@
 {
-  "name": "Remix: Web AAIA v21 - chat operativo- Asociación Aragonesa de IA iwork",
+  "name": "Web AAIA v22",
   "description": "Sitio web institucional de la Asociación Aragonesa de Inteligencia Artificial. Formulario de contacto 100% operativo con Resend.",
   "requestFramePermissions": [
     "geolocation"

@@ -14,7 +14,7 @@ const InternationalCooperation: React.FC<InternationalCooperationProps> = ({ onC
       subtitle: "Su Socio Tecnológico y Ético de IA en España",
       badge: "Convocatorias de Financiación Europea",
       introTitle: "Colaboración Transfronteriza con Impacto Social",
-      introDesc: "Diseñado especialmente para asociaciones, centros de formación y organizaciones de la cuenca mediterránea (Grecia, Turquía, Portugal...), Rumanía y el resto de Europa. Si usted lidera iniciativas con impacto social y busca un partner tecnológico solvente y alineado con los valores éticos europeos para sus proyectos (Erasmus+, Horizon Europe, CERV, etc.), la AAIA es su aliado ideal.",
+      introDesc: "Diseñado especialmente para asociaciones, centros de formación y organizaciones europeas. Si usted lidera iniciativas con impacto social y busca un partner tecnológico solvente y alineado con los valores éticos europeos para sus proyectos (Erasmus+, Horizon Europe, CERV, etc.), la AAIA es su aliado ideal.",
       targetAudienceHeader: "Sinergia de Liderazgo y Comunicación",
       targetAudienceDesc: "Entendemos la visión de las líderes que, tras formarse y liderar en grandes corporaciones, hoy canalizan su talento, idiomas y capacidad de comunicación en construir proyectos que mejoran el mundo. Hablamos su mismo lenguaje profesional y compartimos su nivel de exigencia, rigor y compromiso social.",
       pillarsTitle: "¿Por qué elegir a la AAIA como Socio Tecnológico?",
