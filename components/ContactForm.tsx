@@ -421,24 +421,7 @@ const ContactForm: React.FC = () => {
                       <a className="text-base text-primary font-bold hover:underline" href="mailto:aaia.aragon@gmail.com">aaia.aragon@gmail.com</a>
                     </div>
                   </div>
-                  <div className="flex items-start gap-5">
-                    <div className="w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-primary shadow-xl shrink-0">
-                      <span className="material-icons-round text-2xl">phone</span>
-                    </div>
-                    <div>
-                      <p className="font-black text-white text-lg mb-1">
-                        {t({
-                          es: "Teléfono",
-                          en: "Phone",
-                          de: "Telefon",
-                          fr: "Téléphone",
-                          it: "Telefono",
-                          ro: "Telefon"
-                        })}
-                      </p>
-                      <p className="text-base text-slate-400 font-medium">+34 618 168 463</p>
-                    </div>
-                  </div>
+
                 </div>
               </div>
 
